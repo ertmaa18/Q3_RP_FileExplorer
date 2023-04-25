@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
+    <title>File Explorer</title>
+</head>
+<body>
+<h1>File Explorer</h1>
+<div>
+    <form th:action="@{/explorer}" method="get">
+        <button type="submit" name="directoryName"
+                th:value="${directory.getParent() != null ? directory.getParent().getName() : ''}"
+                style="background-color: yellow">
+            ^up
+        </button>
+    </form>
+    <span style="border-style: solid; border-color: red;width: 100%" id="path" th:text="${path}"></span>
+</div>
+<table>
+    <tr th:each="fileObject: ${directory.getContent()}">
+        <td>
+            <form th:action="@{/explorer}" method="get">
+                <input type="submit"
+                       th:if="${fileObject instanceof T(at.kaindorf.ahif18.q3_rp_fileexplorer.pojos.Directory)}"
+                       name="directoryName" th:value="${fileObject.getName()}"/>
+                <span th:if="${!(fileObject instanceof T(at.kaindorf.ahif18.q3_rp_fileexplorer.pojos.Directory))}"
+                      th:text="${fileObject.getName()}"></span>
+            </form>
+        </td>
+        <td>
+            <span th:text="${fileObject.getLastModified()}"></span>
+        </td>
+        <td>
+            <span th:if="${fileObject instanceof T(at.kaindorf.ahif18.q3_rp_fileexplorer.pojos.FileItem)}"
+                  th:text="${fileObject.getSize()}"></span>
+        </td>
+    </tr>
+</table>
+</body>
+</html>
